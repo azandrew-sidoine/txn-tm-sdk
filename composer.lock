@@ -4,8 +4,57 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "98a09ed3e5db11001ab25b12f0f2ef00",
+    "content-hash": "e89480ef4f449ec0cf551cd67f2d0e3a",
     "packages": [
+        {
+            "name": "drewlabs/curl-client",
+            "version": "v0.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/azandrew-sidoine/drewlabs-curl-client.git",
+                "reference": "953c484d889809577011cdee92f017315bf5c1d4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/azandrew-sidoine/drewlabs-curl-client/zipball/953c484d889809577011cdee92f017315bf5c1d4",
+                "reference": "953c484d889809577011cdee92f017315bf5c1d4",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "donatj/mock-webserver": "^2.5",
+                "phpunit/phpunit": "^6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Drewlabs\\Curl\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "azandrew-sidoine",
+                    "email": "asmyns.platonnas29@gmail.com"
+                }
+            ],
+            "description": "Provides a PHP class around PHP curl object and Psr18 client based on the curl library",
+            "keywords": [
+                "curl",
+                "http"
+            ],
+            "support": {
+                "issues": "https://github.com/azandrew-sidoine/drewlabs-curl-client/issues",
+                "source": "https://github.com/azandrew-sidoine/drewlabs-curl-client/tree/v0.3.3"
+            },
+            "time": "2023-06-14T15:53:33+00:00"
+        },
         {
             "name": "drewlabs/libman",
             "version": "v0.2.7",
@@ -160,6 +209,93 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "drewlabs/code-generator",
+            "version": "v0.2.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/azandrew-sidoine/drewlabs-php-code-generator.git",
+                "reference": "92c738a053c29af6c8d2f21c2750dac2ed4d93b6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/azandrew-sidoine/drewlabs-php-code-generator/zipball/92c738a053c29af6c8d2f21c2750dac2ed4d93b6",
+                "reference": "92c738a053c29af6c8d2f21c2750dac2ed4d93b6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "./src/proxies.php"
+                ],
+                "psr-4": {
+                    "Drewlabs\\CodeGenerator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "azandrew-sidoine",
+                    "email": "asmyns.platonnas29@gmail.com"
+                }
+            ],
+            "description": "Simple utility classes for generating PHP classes, methods, properties and interfaces",
+            "support": {
+                "source": "https://github.com/azandrew-sidoine/drewlabs-php-code-generator/tree/v0.2.6"
+            },
+            "time": "2023-07-20T14:27:58+00:00"
+        },
+        {
+            "name": "drewlabs/mdl-cli",
+            "version": "v0.2.22",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/azandrew-sidoine/mdl.git",
+                "reference": "cfef03a6b576dbed527227293c1586e995ef9dff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/azandrew-sidoine/mdl/zipball/cfef03a6b576dbed527227293c1586e995ef9dff",
+                "reference": "cfef03a6b576dbed527227293c1586e995ef9dff",
+                "shasum": ""
+            },
+            "require": {
+                "drewlabs/code-generator": "^0.2.4",
+                "ext-yaml": "*",
+                "php": ">=7.2"
+            },
+            "bin": [
+                "bin/mdl"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Drewlabs\\Mdl\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "azandrew-sidoine",
+                    "email": "asmyns.platonnas29@gmail.com"
+                }
+            ],
+            "description": "PHP script for generating classes, interface, mixin, ect... based on UML model written in YAML or JSON language",
+            "support": {
+                "issues": "https://github.com/azandrew-sidoine/mdl/issues",
+                "source": "https://github.com/azandrew-sidoine/mdl/tree/v0.2.22"
+            },
+            "time": "2023-06-19T15:30:31+00:00"
+        },
         {
             "name": "myclabs/deep-copy",
             "version": "1.11.1",
@@ -708,16 +844,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.2.4",
+            "version": "10.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "68484779b5a2ed711fbdeba6ca01910d87acdff2"
+                "reference": "1c17815c129f133f3019cc18e8d0c8622e6d9bcd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/68484779b5a2ed711fbdeba6ca01910d87acdff2",
-                "reference": "68484779b5a2ed711fbdeba6ca01910d87acdff2",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1c17815c129f133f3019cc18e8d0c8622e6d9bcd",
+                "reference": "1c17815c129f133f3019cc18e8d0c8622e6d9bcd",
                 "shasum": ""
             },
             "require": {
@@ -789,7 +925,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.2.4"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.2.6"
             },
             "funding": [
                 {
@@ -805,7 +941,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-07-10T04:06:08+00:00"
+            "time": "2023-07-17T12:08:28+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -1317,16 +1453,16 @@
         },
         {
             "name": "sebastian/global-state",
-            "version": "6.0.0",
+            "version": "6.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/global-state.git",
-                "reference": "aab257c712de87b90194febd52e4d184551c2d44"
+                "reference": "7ea9ead78f6d380d2a667864c132c2f7b83055e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/global-state/zipball/aab257c712de87b90194febd52e4d184551c2d44",
-                "reference": "aab257c712de87b90194febd52e4d184551c2d44",
+                "url": "https://api.github.com/repos/sebastianbergmann/global-state/zipball/7ea9ead78f6d380d2a667864c132c2f7b83055e4",
+                "reference": "7ea9ead78f6d380d2a667864c132c2f7b83055e4",
                 "shasum": ""
             },
             "require": {
@@ -1366,7 +1502,8 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/global-state/issues",
-                "source": "https://github.com/sebastianbergmann/global-state/tree/6.0.0"
+                "security": "https://github.com/sebastianbergmann/global-state/security/policy",
+                "source": "https://github.com/sebastianbergmann/global-state/tree/6.0.1"
             },
             "funding": [
                 {
@@ -1374,7 +1511,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-02-03T07:07:38+00:00"
+            "time": "2023-07-19T07:19:23+00:00"
         },
         {
             "name": "sebastian/lines-of-code",

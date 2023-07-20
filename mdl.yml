@@ -1,0 +1,384 @@
+name: "Drewlabs\\Txn\\TMoney"
+path: "/home/azandrew/workspace/lib/php/txn-tm-sdk/src"
+directories:
+  interfaces: "Contracts"
+  mixins: "Traits"
+
+# Mixin Components
+mixins:
+  # Mixins
+
+# Interface components
+interfaces:
+  - name: "AuthorizationServerInterface"
+    methods:
+      - name: getHost
+        comment: "Returns the authorization server host"
+        returns: "string"
+        modifier: "public"
+      - name: getTokenUrl
+        comment: "Returns the authorization server token request url"
+        returns: "string"
+        modifier: "public"
+  - name: "AuthorizationResponseInterface"
+    methods:
+      - name: getStatusCode
+        comment: "Returns the response status code"
+        returns: "int"
+        modifier: "public"
+      - name: getToken
+        comment: "Returns the authorization token string"
+        returns: "string"
+        modifier: "public"
+  - name: "AuthorizationCommandArgInterface"
+    methods:
+      - name: getAuthorizationMethod
+        comment: "Returns the authorization request method"
+        returns: "string"
+        modifier: "public"
+      - name: getAuthorizationId
+        comment: "Returns the authorization request client id or username"
+        returns: "string"
+        modifier: "public"
+      - name: getAuthorizationSecret
+        comment: "Returns the authorization request client secret or password"
+        returns: "string"
+        modifier: "public"
+
+  # Command Interfaces
+  - name: "CommandResultInterface"
+    methods:
+      - name: "getCode"
+        modifier: "public"
+        comment: "Return command result code"
+        returns: "int"
+      - name: "getReasonPhrase"
+        modifier: "public"
+        comment: "Return command result reason phrase"
+        returns: "string"
+      - name: "getCommandId"
+        modifier: "public"
+        comment: "Return command command id for which the result is generated"
+        returns: "string"
+  - name: "CommandErrorInterface"
+    methods:
+      - name: "getErrorCode"
+        modifier: "public"
+        comment: "Return command error code"
+        returns: "int"
+      - name: "getErrorMessage"
+        modifier: "public"
+        comment: "Return command error reason phrase"
+        returns: "string"
+
+  # Tmoney Transaction interfaces
+
+  # We make use of a single interface for debit and credit transaction which is the contract below
+  - name: "TransactionCommandArgInterface"
+    methods:
+      - name: "getCommandId"
+        comment: "Returns the command id value"
+        returns: "string"
+      - name: "getAccountNumber"
+        comment: "Returns account number for the transaction"
+        returns: "string"
+      - name: "getAmount"
+        comment: "Returns the transaction amount"
+        returns: "string"
+      - name: "getReference"
+        comment: "Returns the transaction invoice reference"
+        returns: "string"
+      - name: "getCreatedAt"
+        comment: "Returns date at which the transaction was created"
+        returns: "string|null"
+      - name: "getDescription"
+        comment: "Returns transaction description"
+        returns: "string|null"
+
+  - name: "TMoneyTransactionInterface"
+    methods:
+      - name: "getTMoneyReference"
+        modifier: "public"
+        comment: "Returns the TMoney platform transaction reference"
+        returns: "string"
+      - name: "getProcessedAt"
+        modifier: "public"
+        comment: "Returns the date time at which transaction was processed"
+        returns: "\\DateTimeInterface"
+      - name: "getRequestType"
+        modifier: "public"
+        comment: "Returns TMOney request type"
+        returns: "string"
+      - name: "getReference"
+        modifier: "public"
+        comment: "Returns transaction reference"
+        returns: "string"
+      - name: "getValue"
+        modifier: "public"
+        comment: "Returns transaction value/amount"
+        returns: "float"
+      - name: "getPayeer"
+        modifier: "public"
+        comment: "Returns transaction payeer identity / phone number"
+        returns: "string"
+      - name: "getMerchant"
+        modifier: "public"
+        comment: "Returns transaction merchant which wallet was affected by the transaction"
+        returns: "string"
+
+  - name: "CreditResultInterface"
+    extends:
+      - "Contracts\\TMoneyTransactionInterface"
+      - "Contracts\\CommandResultInterface"
+    methods:
+      - name: "getMerchantBalance"
+        comment: "Returns the merchant wallet balance"
+        returns: "float"
+
+  - name: "TransactionStatusArgInterface"
+    methods:
+      - name: "__toString"
+        comment: "Returns the transaction command id"
+        returns: "string"
+
+  - name: "DebitResultInterface"
+    extends:
+      - "Contracts\\CommandResultInterface"
+
+  - name: "DebitInterface"
+    extends:
+      - "Contracts\\TMoneyTransactionInterface"
+    methods:
+      - name: "getDescription"
+        comment: "Return the credit operation result description"
+        returns: "string"
+      - name: "getCode"
+        comment: "Return the credit operation result code"
+        returns: "int"
+      - name: "getReasonPhrase"
+        comment: "Return the credit operation result reason phrase"
+        returns: "string"
+
+  - name: "TransactionServerOptionInterface"
+    methods:
+      - name: "getEndpoint"
+        comment: "Return the transaction service endpoint value"
+        returns: "string"
+      - name: "getBearerToken"
+        comment: "Return the bearer authorization header token string"
+        returns: "string"
+
+# Class components
+classes:
+  # - name: "AuthorizationServer"
+  #   final: true
+  #   constructor: true
+  #   setter: false
+  #   getter: false
+  #   properties:
+  #     - name: host
+  #       type: "string"
+  #     - name: tokenPath
+  #       type: "string"
+  #   implements:
+  #     - "Contracts\\AuthorizationServerInterface"
+  # - name: "AuthorizationResponse"
+  #   final: true
+  #   constructor: true
+  #   setter: false
+  #   getter: false
+  #   properties:
+  #     - name: attributes
+  #       type: "array"
+  #     - name: "status"
+  #       type: "int"
+  #       default: 2000
+
+  #   implements:
+  #     - "Contracts\\AuthorizationResponseInterface"
+
+  #   methods:
+  #     - name: "new"
+  #       comment: "creates new class instance"
+  #       static: true
+  #       returns: "static"
+  #       parameters:
+  #         - name: "attributes"
+  #           type: "array"
+
+  # - name: "AuthorizationCommandArg"
+  #   final: true
+  #   constructor: true
+  #   getter: false
+  #   setter: false
+  #   properties:
+  #     - name: user
+  #       type: "string"
+  #     - name: pass
+  #       type: "string"
+  #     - name: method
+  #       type: "string"
+  #       optional: true
+  #       default: "POST"
+  #   implements:
+  #     - "Contracts\\AuthorizationCommandArgInterface"
+
+  # - name: "AuthorizationCommand"
+  #   final: true
+  #   constructor: true
+  #   setter: false
+  #   properties:
+  #     - name: server
+  #       type: "\\Drewlabs\\Txn\\TMoney\\Contracts\\AuthorizationServerInterface"
+  #   mixins:
+  #     - "\\Drewlabs\\Txn\\TMoney\\Traits\\RequestClient"
+  #   methods:
+  #     - name: "handle"
+  #       comment: "Handle authorize request"
+  #       returns: "\\Drewlabs\\Txn\\TMoney\\Contracts\\AuthorizationResponseInterface"
+  #       modifier: "public"
+  #       parameters:
+  #         - name: "arg"
+  #           type: "\\Drewlabs\\Txn\\TMoney\\Contracts\\AuthorizationCommandArgInterface"
+
+  # - name: "CreditCommand"
+  #   final: true
+  #   constructor: true
+  #   setter: false
+  #   properties:
+  #     - name: "options"
+  #       type: "\\Drewlabs\\Txn\\TMoney\\Contracts\\TransactionServerOptionInterface"
+  #   mixins:
+  #     - "\\Drewlabs\\Txn\\TMoney\\Traits\\RequestClient"
+  #   methods:
+  #     - name: "handle"
+  #       comment: "Handle credit request"
+  #       returns: "\\Drewlabs\\Txn\\TMoney\\Contracts\\CreditResultInterface"
+  #       modifier: "public"
+  #       parameters:
+  #         - name: "arg"
+  #           type: "\\Drewlabs\\Txn\\TMoney\\Contracts\\TransactionCommandArgInterface"
+
+  # - name: "CheckCreditStatusCommand"
+  #   final: true
+  #   constructor: true
+  #   setter: false
+  #   properties:
+  #     - name: "options"
+  #       type: "\\Drewlabs\\Txn\\TMoney\\Contracts\\TransactionServerOptionInterface"
+  #   mixins:
+  #     - "\\Drewlabs\\Txn\\TMoney\\Traits\\RequestClient"
+  #   methods:
+  #     - name: "handle"
+  #       comment: "Handle check credit status"
+  #       returns: "\\Drewlabs\\Txn\\TMoney\\Contracts\\CreditResultInterface"
+  #       modifier: "public"
+  #       parameters:
+  #         - name: "arg"
+  #           type: "\\Drewlabs\\Txn\\TMoney\\Contracts\\TransactionStatusArgInterface"
+
+  # - name: "DebitCommand"
+  #   final: true
+  #   constructor: true
+  #   setter: false
+  #   properties:
+  #     - name: "options"
+  #       type: "\\Drewlabs\\Txn\\TMoney\\Contracts\\TransactionServerOptionInterface"
+  #   mixins:
+  #     - "\\Drewlabs\\Txn\\TMoney\\Traits\\RequestClient"
+  #   methods:
+  #     - name: "handle"
+  #       comment: "Handle debit request"
+  #       returns: "\\Drewlabs\\Txn\\TMoney\\Contracts\\DebitResultInterface"
+  #       modifier: "public"
+  #       parameters:
+  #         - name: "arg"
+  #           type: "\\Drewlabs\\Txn\\TMoney\\Contracts\\TransactionCommandArgInterface"
+
+  # - name: "CheckDebitStatusCommand"
+  #   final: true
+  #   constructor: true
+  #   setter: false
+  #   properties:
+  #     - name: "options"
+  #       type: "\\Drewlabs\\Txn\\TMoney\\Contracts\\TransactionServerOptionInterface"
+  #   mixins:
+  #     - "\\Drewlabs\\Txn\\TMoney\\Traits\\RequestClient"
+  #   methods:
+  #     - name: "handle"
+  #       comment: "Handle check debit status"
+  #       returns: "\\Drewlabs\\Txn\\TMoney\\Contracts\\DebitInterface"
+  #       modifier: "public"
+  #       parameters:
+  #         - name: "arg"
+  #           type: "\\Drewlabs\\Txn\\TMoney\\Contracts\\TransactionStatusArgInterface"
+
+  # - name: "TransactionStatusArg"
+  #   final: true
+  #   constructor: true
+  #   setter: false
+  #   getter: false
+  #   properties:
+  #     - name: "value"
+  #       type: "string"
+  #   implements:
+  #     - "Contracts\\TransactionStatusArgInterface"
+
+  # - name: "TransactionServerOption"
+  #   final: true
+  #   constructor: true
+  #   setter: false
+  #   getter: false
+
+  #   properties:
+  #     - name: "url"
+  #       type: "string"
+
+  #     - name: "bearerToken"
+  #       type: "string"
+
+  #   implements:
+  #     - "Contracts\\TransactionServerOptionInterface"
+
+  #   methods:
+  #     - name: "toArray"
+  #       comment: "Returns the array representation of the server options"
+  #       returns: "array"
+
+  # - name: "TransactionCommandArg"
+  #   final: true
+  #   constructor: true
+  #   setter: true
+  #   getter: false
+  #   properties:
+  #     - name: "accountNumber"
+  #       type: "string"
+  #     - name: "amount"
+  #       type: "float"
+  #     - name: "reference"
+  #       type: "string"
+  #     - name: "command"
+  #       type: "string"
+  #       optional: true
+  #       default: null
+  #     - name: "at"
+  #       type: "string"
+  #       optional: true
+  #       default: null
+  #     - name: "description"
+  #       type: "string"
+  #       optional: true
+  #       default: null
+  #   implements:
+  #     - "Contracts\\TransactionCommandArgInterface"
+  - name: "CreditResult"
+    final: true
+    constructor: true
+    setter: false
+    getter: true
+    properties:
+      - name: "attributes"
+        type: "array"
+
+    implements:
+      - "Contracts\\CreditResultInterface"

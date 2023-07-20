@@ -3,6 +3,7 @@
     "description": "TMoney API driver for txn platform",
     "type": "library",
     "require": {
+        "drewlabs/curl-client": "^0.3.3",
         "drewlabs/libman": "^0.2.7",
         "drewlabs/txn-contracts": "^0.2.2"
     },
@@ -11,6 +12,7 @@
         "TMoney"
     ],
     "require-dev": {
+        "drewlabs/mdl-cli": "^0.2.22",
         "phpunit/phpunit": ">=6.0"
     },
     "license": "MIT",

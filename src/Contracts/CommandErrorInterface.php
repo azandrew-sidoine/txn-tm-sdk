@@ -16,12 +16,6 @@ namespace Drewlabs\Txn\TMoney\Contracts;
 
 interface CommandErrorInterface
 {
-	/**
-	 * Returns the command name for which the error is generated
-	 * 
-	 * @return string 
-	 */
-	public function getCommand();
 
 	/**
 	 * Return command error code
@@ -38,5 +32,13 @@ interface CommandErrorInterface
 	 * @return string
 	 */
 	public function getErrorMessage();
+
+	/**
+	 * Returns the command name for which the error is generated
+	 * 
+	 *
+	 * @return string
+	 */
+	public function getCommand();
 
 }

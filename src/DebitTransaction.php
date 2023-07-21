@@ -13,10 +13,11 @@ declare(strict_types=1);
 
 namespace Drewlabs\Txn\TMoney;
 
-use Drewlabs\Txn\TMoney\Contracts\CreditResultInterface;
+use Drewlabs\Txn\TMoney\Contracts\TMoneyTransactionInterface;
+use Drewlabs\Txn\TMoney\Contracts\CommandResultInterface;
 use DateTimeInterface;
 
-final class CreditResult implements CreditResultInterface
+final class DebitTransaction implements TMoneyTransactionInterface, CommandResultInterface
 {
 
 	/**
@@ -141,7 +142,7 @@ final class CreditResult implements CreditResultInterface
 	public function getReasonPhrase()
 	{
 		# code...
-		return $this->attributes['message'] ?? null;
+		return $this->attributes['description'] ??  $this->attributes['message'] ?? null;
 	}
 
 	/**
@@ -157,18 +158,6 @@ final class CreditResult implements CreditResultInterface
 	}
 
 	/**
-	 * Returns the merchant wallet balance
-	 * 
-	 *
-	 * @return float
-	 */
-	public function getMerchantBalance()
-	{
-		# code...
-		return $this->attributes['soldePartenaire'] ?? null;
-	}
-
-	/**
 	 * Get attributes property value
 	 * 
 	 *
@@ -179,4 +168,5 @@ final class CreditResult implements CreditResultInterface
 		# code...
 		return $this->attributes;
 	}
+
 }

@@ -18,7 +18,7 @@ use Drewlabs\Txn\TMoney\Contracts\AuthorizationServerInterface;
 use Drewlabs\Txn\TMoney\Contracts\AuthorizationResponseInterface;
 use Drewlabs\Txn\TMoney\Contracts\AuthorizationCommandArgInterface;
 use Drewlabs\Txn\TMoney\Exceptions\AuthorizationException;
-// use Drewlabs\Curl\Client as Curl;
+use Drewlabs\Curl\Client as Curl;
 
 final class AuthorizationCommand
 {
@@ -35,10 +35,11 @@ final class AuthorizationCommand
 	 * 
 	 * @param AuthorizationServerInterface $server
 	 */
-	public function __construct(AuthorizationServerInterface $server)
+	public function __construct(AuthorizationServerInterface $server, Curl $curl = null)
 	{
 		# code...
 		$this->server = $server;
+		$this->curl = $curl ?? new Curl();
 	}
 
 	/**

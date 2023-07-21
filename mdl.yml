@@ -73,7 +73,7 @@ interfaces:
       - name: "getCommand"
         modifier: "public"
         comment: "Returns the command name for which the error is generated"
-        return: "string"
+        returns: "string"
 
   # Tmoney Transaction interfaces
 
@@ -144,10 +144,6 @@ interfaces:
       - name: "__toString"
         comment: "Returns the transaction command id"
         returns: "string"
-
-  - name: "DebitResultInterface"
-    extends:
-      - "Contracts\\CommandResultInterface"
 
   - name: "DebitInterface"
     extends:
@@ -293,7 +289,7 @@ classes:
   #   methods:
   #     - name: "handle"
   #       comment: "Handle debit request"
-  #       returns: "\\Drewlabs\\Txn\\TMoney\\Contracts\\DebitResultInterface"
+  #       returns: "\\Drewlabs\\Txn\\TMoney\\Contracts\\CommandResultInterface"
   #       modifier: "public"
   #       parameters:
   #         - name: "arg"
@@ -375,7 +371,36 @@ classes:
   #       default: null
   #   implements:
   #     - "Contracts\\TransactionCommandArgInterface"
-  - name: "CreditResult"
+  # - name: "CreditTransaction"
+  #   final: true
+  #   constructor: true
+  #   setter: false
+  #   getter: true
+  #   properties:
+  #     - name: "attributes"
+  #       type: "array"
+
+  #   implements:
+  #     - "Contracts\\CreditResultInterface"
+  # - name: "CommandResult"
+  #   final: true
+  #   constructor: true
+  #   setter: false
+  #   getter: false
+  #   properties:
+  #     - name: "id"
+  #       type: string
+
+  #     - name: "code"
+  #       type: "int"
+
+  #     - name: "message"
+  #       type: "string"
+
+  #   implements:
+  #     - "Contracts\\CommandResultInterface"
+
+  - name: "DebitTransaction"
     final: true
     constructor: true
     setter: false
@@ -385,4 +410,5 @@ classes:
         type: "array"
 
     implements:
-      - "Contracts\\CreditResultInterface"
+      - "Contracts\\TMoneyTransactionInterface"
+      - "Contracts\\CommandResultInterface"

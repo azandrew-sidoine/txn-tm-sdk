@@ -50,6 +50,10 @@ final class TransactionServerOption implements TransactionServerOptionInterface
 	public function toArray()
 	{
 		# code...
+		return [
+			'url' => $this->url,
+			'bearer_token' => $this->bearerToken
+		];
 	}
 
 	/**

@@ -16,9 +16,10 @@ namespace Drewlabs\Txn\TMoney;
 use Drewlabs\Txn\TMoney\Traits\RequestClient;
 use Drewlabs\Txn\TMoney\Contracts\TransactionServerOptionInterface;
 use Drewlabs\Txn\TMoney\Contracts\TransactionServerOptionInterface as ContractsTransactionServerOptionInterface;
-use Drewlabs\Txn\TMoney\Contracts\DebitResultInterface;
+use Drewlabs\Txn\TMoney\Contracts\CommandResultInterface;
 use Drewlabs\Txn\TMoney\Contracts\TransactionCommandArgInterface;
 use Drewlabs\Txn\TMoney\Exceptions\CommandException;
+use Drewlabs\Curl\Client as Curl;
 
 final class DebitCommand
 {
@@ -35,10 +36,11 @@ final class DebitCommand
 	 * 
 	 * @param ContractsTransactionServerOptionInterface $options
 	 */
-	public function __construct(ContractsTransactionServerOptionInterface $options)
+	public function __construct(ContractsTransactionServerOptionInterface $options, Curl $curl = null)
 	{
 		# code...
 		$this->options = $options;
+		$this->curl = $curl ?? new Curl();
 	}
 
 	/**
@@ -46,7 +48,7 @@ final class DebitCommand
 	 * 
 	 * @param TransactionCommandArgInterface $arg
 	 *
-	 * @return DebitResultInterface
+	 * @return CommandResultInterface
 	 */
 	public function handle(TransactionCommandArgInterface $arg)
 	{
@@ -58,11 +60,11 @@ final class DebitCommand
 			['Authorization' => sprintf("Bearer %s", $this->options->getBearerToken())]
 		);
 
-		if (2000 !== ($status = intval($response->getDecodedBodyValue('statut.code'))) && (200 !== $status)) {
+		if (2000 !== ($status = intval($response->getDecodedBodyValue('code'))) && (200 !== $status)) {
 			throw new CommandException(get_class($this), $response->getDecodedBodyValue('message', 'Unknown Error'), $status);
 		}
 
-		return new CreditResult($response->getDecodedBody());
+		return new CommandResult(strval($arg->getCommandId()), $status, $response->getDecodedBodyValue('message') ?? 'Unknown command message');
 	}
 
 	/**

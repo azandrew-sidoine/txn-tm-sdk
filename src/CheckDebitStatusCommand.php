@@ -18,6 +18,8 @@ use Drewlabs\Txn\TMoney\Contracts\TransactionServerOptionInterface;
 use Drewlabs\Txn\TMoney\Contracts\TransactionServerOptionInterface as ContractsTransactionServerOptionInterface;
 use Drewlabs\Txn\TMoney\Contracts\DebitInterface;
 use Drewlabs\Txn\TMoney\Contracts\TransactionStatusArgInterface;
+use Drewlabs\Txn\TMoney\Exceptions\CommandException;
+use Drewlabs\Curl\Client as Curl;
 
 final class CheckDebitStatusCommand
 {
@@ -34,10 +36,11 @@ final class CheckDebitStatusCommand
 	 * 
 	 * @param ContractsTransactionServerOptionInterface $options
 	 */
-	public function __construct(ContractsTransactionServerOptionInterface $options)
+	public function __construct(ContractsTransactionServerOptionInterface $options, Curl $curl = null)
 	{
 		# code...
 		$this->options = $options;
+		$this->curl = $curl ?? new Curl();
 	}
 
 	/**
@@ -50,6 +53,23 @@ final class CheckDebitStatusCommand
 	public function handle(TransactionStatusArgInterface $arg)
 	{
 		# code...
+		$response = $this->sendRequest(
+			sprintf("%s?%s", $this->options->getEndpoint(), (string)$arg),
+			'GET',
+			['Authorization' => sprintf("Bearer %s", $this->options->getBearerToken())]
+		);
+
+		if (($status = intval($response->getStatusCode())) && (200 !== $status)) {
+			throw new CommandException(get_class($this), 500 === $response->getStatusCode() ? 'Internal Server Error' : 'Unknown error', $response->getStatusCode());
+		}
+
+		// Get the data from the decoded response body based on TMoney documentation
+		$transactions = $response->getDecodedBodyValue('data') ?? [];
+
+		// Map list of transactions into debit result instances
+		return null === $transactions ? [] : array_map(function($transaction) {
+			return new DebitTransaction($transaction);
+		}, $transactions);
 	}
 
 	/**

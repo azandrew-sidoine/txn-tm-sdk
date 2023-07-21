@@ -19,6 +19,7 @@ use Drewlabs\Txn\TMoney\Contracts\TransactionServerOptionInterface as ContractsT
 use Drewlabs\Txn\TMoney\Contracts\CreditResultInterface;
 use Drewlabs\Txn\TMoney\Contracts\TransactionCommandArgInterface;
 use Drewlabs\Txn\TMoney\Exceptions\CommandException;
+use Drewlabs\Curl\Client as Curl;
 
 final class CreditCommand
 {
@@ -35,10 +36,11 @@ final class CreditCommand
 	 * 
 	 * @param ContractsTransactionServerOptionInterface $options
 	 */
-	public function __construct(ContractsTransactionServerOptionInterface $options)
+	public function __construct(ContractsTransactionServerOptionInterface $options, Curl $curl = null)
 	{
 		# code...
 		$this->options = $options;
+		$this->curl = $curl ?? new Curl();
 	}
 
 	/**
@@ -58,11 +60,11 @@ final class CreditCommand
 			['Authorization' => sprintf("Bearer %s", $this->options->getBearerToken())]
 		);
 
-		if (2000 !== ($status = intval($response->getDecodedBodyValue('statut.code'))) && (200 !== $status)) {
+		if (2000 !== ($status = intval($response->getDecodedBodyValue('code'))) && (200 !== $status)) {
 			throw new CommandException(get_class($this), $response->getDecodedBodyValue('message', 'Unknown Error'), $status);
 		}
 
-		return new CreditResult($response->getDecodedBody());
+		return new CreditTransaction($response->getDecodedBody());
 	}
 
 	/**

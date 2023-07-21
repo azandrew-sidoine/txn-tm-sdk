@@ -54,7 +54,7 @@ interface TMoneyTransactionInterface
 	 * Returns transaction value/amount
 	 * 
 	 *
-	 * @return string
+	 * @return float
 	 */
 	public function getValue();
 

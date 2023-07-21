@@ -13,10 +13,12 @@ declare(strict_types=1);
 
 namespace Drewlabs\Txn\TMoney;
 
+use Drewlabs\Txn\Exceptions\RequestException;
 use Drewlabs\Txn\TMoney\Traits\RequestClient;
 use Drewlabs\Txn\TMoney\Contracts\TransactionServerOptionInterface;
 use Drewlabs\Txn\TMoney\Contracts\CreditResultInterface;
 use Drewlabs\Txn\TMoney\Contracts\TransactionStatusArgInterface;
+use Drewlabs\Txn\TMoney\Exceptions\CommandException;
 
 final class CheckCreditStatusCommand
 {
@@ -44,11 +46,28 @@ final class CheckCreditStatusCommand
 	 * 
 	 * @param TransactionStatusArgInterface $arg
 	 *
-	 * @return CreditResultInterface
+	 * @return CreditResultInterface[]
 	 */
 	public function handle(TransactionStatusArgInterface $arg)
 	{
 		# code...
+		$response = $this->sendRequest(
+			sprintf("%s?%s", $this->options->getEndpoint(), (string)$arg),
+			'GET',
+			['Authorization' => sprintf("Bearer %s", $this->options->getBearerToken())]
+		);
+
+		if (2000 !== ($status = intval($response->getDecodedBodyValue('statut.code'))) && (200 !== $status)) {
+			throw new CommandException(get_class($this), 500 === $response->getStatusCode() ? 'Internal Server Error' : 'Unknown error', $response->getStatusCode());
+		}
+
+		// Get the data from the decoded response body based on TMoney documentation
+		$transactions = $response->getDecodedBodyValue('data') ?? [];
+
+		// Map list of transactions into credit result instances
+		return null === $transactions ? [] : array_map(function($transaction) {
+			return new CreditResult($transaction);
+		}, $transactions);
 	}
 
 	/**

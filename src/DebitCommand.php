@@ -18,6 +18,7 @@ use Drewlabs\Txn\TMoney\Contracts\TransactionServerOptionInterface;
 use Drewlabs\Txn\TMoney\Contracts\TransactionServerOptionInterface as ContractsTransactionServerOptionInterface;
 use Drewlabs\Txn\TMoney\Contracts\DebitResultInterface;
 use Drewlabs\Txn\TMoney\Contracts\TransactionCommandArgInterface;
+use Drewlabs\Txn\TMoney\Exceptions\CommandException;
 
 final class DebitCommand
 {
@@ -50,6 +51,18 @@ final class DebitCommand
 	public function handle(TransactionCommandArgInterface $arg)
 	{
 		# code...
+		$response = $this->sendRequest(
+			$this->options->getEndpoint(),
+			'POST',
+			["idRequete" => $arg->getCommandId(), "numeroClient" => $arg->getAccountNumber(), "montant" => $arg->getAmount(), "refCommande" => $arg->getReference(), "dateHeureRequete" => $arg->getCreatedAt(), "description" => $arg->getDescription()],
+			['Authorization' => sprintf("Bearer %s", $this->options->getBearerToken())]
+		);
+
+		if (2000 !== ($status = intval($response->getDecodedBodyValue('statut.code'))) && (200 !== $status)) {
+			throw new CommandException(get_class($this), $response->getDecodedBodyValue('message', 'Unknown Error'), $status);
+		}
+
+		return new CreditResult($response->getDecodedBody());
 	}
 
 	/**
@@ -63,5 +76,4 @@ final class DebitCommand
 		# code...
 		return $this->options;
 	}
-
 }

@@ -18,7 +18,7 @@ use Drewlabs\Txn\TMoney\Contracts\TransactionServerOptionInterface;
 use Drewlabs\Txn\TMoney\Contracts\TransactionServerOptionInterface as ContractsTransactionServerOptionInterface;
 use Drewlabs\Txn\TMoney\Contracts\CreditResultInterface;
 use Drewlabs\Txn\TMoney\Contracts\TransactionCommandArgInterface;
-use Drewlabs\Txn\TMoney\Exceptions\CreditRequestException;
+use Drewlabs\Txn\TMoney\Exceptions\CommandException;
 
 final class CreditCommand
 {
@@ -59,7 +59,7 @@ final class CreditCommand
 		);
 
 		if (2000 !== ($status = intval($response->getDecodedBodyValue('statut.code'))) && (200 !== $status)) {
-			throw new CreditRequestException($response->getDecodedBodyValue('message', 'Unknown Error'), $status);
+			throw new CommandException(get_class($this), $response->getDecodedBodyValue('message', 'Unknown Error'), $status);
 		}
 
 		return new CreditResult($response->getDecodedBody());

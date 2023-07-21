@@ -70,6 +70,10 @@ interfaces:
         modifier: "public"
         comment: "Return command error reason phrase"
         returns: "string"
+      - name: "getCommand"
+        modifier: "public"
+        comment: "Returns the command name for which the error is generated"
+        return: "string"
 
   # Tmoney Transaction interfaces
 

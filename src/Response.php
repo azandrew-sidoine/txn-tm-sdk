@@ -41,7 +41,7 @@ class Response
      * @param array $headers 
      * @return void 
      */
-    public function __construct($body = '', int $status = 200, array $headers = [])
+    public function __construct(string $body = '', int $status = 200, array $headers = [])
     {
         $this->body = $body;
         if (!empty($body)) {
@@ -81,7 +81,19 @@ class Response
      */
     public function getHeader(string $name, $default = null)
     {
-        return $this->getHeaders()[$name] ?? (!is_string($default) && is_callable($default) ? $default() : $default ?? null);
+        $default = !is_string($default) && is_callable($default) ? $default() : function () use ($default) {
+            return $default ?? null;
+        };
+        if (empty($headers = $this->getHeaders())) {
+            return $default();
+        }
+        $normalized = strtolower($name);
+        foreach ($headers as $key => $header) {
+            if (strtolower($key) === $normalized) {
+                return implode(',', \is_array($header) ? $header : [$header]);
+            }
+        }
+        return $default();
     }
 
     /**
@@ -130,5 +142,55 @@ class Response
             return $current;
         }
         return $this->getDecodedBody()[$name] ?? (!is_string($default) && is_callable($default) ? $default() : $default ?? null);
+    }
+
+    /**
+     * clone the current instance to a new response instance
+     * 
+     * @return static 
+     */
+    public function clone()
+    {
+        return new static($this->getBody() ?? '', $this->getStatusCode(), $this->getHeaders());
+    }
+
+    /**
+     * immutable interface that modifies the response body instance
+     * 
+     * @param string $body 
+     * @return static 
+     */
+    public function withBody(string $body)
+    {
+        return new static($body, $this->getStatusCode(), $this->getHeaders());
+    }
+
+    /**
+     * immutable interface that modifies the headers property of the response
+     * 
+     * @param array $headers 
+     * @return static 
+     */
+    public function withHeaders(array $headers)
+    {
+        return new static($this->getBody(), $this->getStatusCode(), $headers);
+    }
+
+    /**
+     * immutable interface adding header value to response headers
+     * 
+     * @param string $name 
+     * @param mixed $value 
+     * @return static 
+     */
+    public function withAddedHeader(string $name, $value)
+    {
+        $headers = $this->getHeaders();
+        if (array_key_exists($name, $headers) && is_array($headers[$name])) {
+            $headers[$name][] = $value;
+        } else {
+            $headers[$name] = !empty($headers[$name]) ? array_merge([$headers[$name]], [$value]) : $value;
+        }
+        return $this->withHeaders($headers);
     }
 }

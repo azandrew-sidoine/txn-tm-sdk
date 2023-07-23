@@ -20,36 +20,16 @@ trait DecodesResponse
 {
 
     /**
-     * Get request header caseless.
-     *
-     * @return string
-     */
-    private function getHeader(array $headers, string $name)
-    {
-        if (empty($headers)) {
-            return null;
-        }
-        $normalized = strtolower($name);
-        foreach ($headers as $key => $header) {
-            if (strtolower($key) === $normalized) {
-                return implode(',', \is_array($header) ? $header : [$header]);
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Decode request response.
      *
      * @throws JsonException
      *
      * @return array
      */
-    private function decodeResponse(string $response, array $headers = [])
+    private function decodeResponse(string $response)
     {
         $result = null;
-        if (RegExp::matchJson($this->getHeader($headers, 'content-type'))) {
+        if (RegExp::matchJson($this->getHeader('content-type', 'application/json'))) {
             $result = (new JSONDecoder(true))->decode($response);
         }
         // If the Content-Type header is not present in the response headers, we apply the try catch clause

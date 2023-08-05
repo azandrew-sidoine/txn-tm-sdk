@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Drewlabs\Txn\TMoney;
 
 use Drewlabs\Txn\TMoney\Traits\RequestClient;
-use Drewlabs\Txn\TMoney\Contracts\TransactionServerOptionInterface;
+use Drewlabs\Txn\TMoney\Contracts\TransactionServerConfigInterface;
 use Drewlabs\Txn\TMoney\Contracts\CreditResultInterface;
 use Drewlabs\Txn\TMoney\Contracts\TransactionStatusArgInterface;
 use Drewlabs\Txn\TMoney\Exceptions\CommandException;
@@ -26,19 +26,19 @@ final class CheckCreditStatusCommand
 	use RequestClient;
 
 	/**
-	 * @var TransactionServerOptionInterface
+	 * @var TransactionServerConfigInterface
 	 */
-	private $options = null;
+	private $config = null;
 
 	/**
 	 * Create new class instance
 	 * 
-	 * @param TransactionServerOptionInterface $options
+	 * @param TransactionServerConfigInterface $config
 	 */
-	public function __construct(TransactionServerOptionInterface $options, Curl $curl = null)
+	public function __construct(TransactionServerConfigInterface $config, Curl $curl = null)
 	{
 		# code...
-		$this->options = $options;
+		$this->config = $config;
 		$this->curl = $curl ?? new Curl();
 	}
 
@@ -53,9 +53,9 @@ final class CheckCreditStatusCommand
 	{
 		# code...
 		$response = $this->sendRequest(
-			sprintf("%s?%s", $this->options->getEndpoint(), (string)$arg),
+			sprintf("%s?%s", $this->config->getEndpoint(), (string)$arg),
 			'GET',
-			['Authorization' => sprintf("Bearer %s", $this->options->getBearerToken())]
+			['Authorization' => sprintf("Bearer %s", $this->config->getBearerToken())]
 		);
 
 		if (($status = intval($response->getStatusCode())) && (200 !== $status)) {
@@ -75,12 +75,12 @@ final class CheckCreditStatusCommand
 	 * Get options property value
 	 * 
 	 *
-	 * @return TransactionServerOptionInterface
+	 * @return TransactionServerConfigInterface
 	 */
 	public function getOptions()
 	{
 		# code...
-		return $this->options;
+		return $this->config;
 	}
 
 }

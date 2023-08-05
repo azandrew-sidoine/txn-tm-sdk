@@ -14,7 +14,8 @@
         </testsuite>
     </testsuites>
     <php>
-        <env name="APP_ENV" value="testing" />
+        <env name="APP_ENV" value="testing" force="true" />
+        <env name="HTTP_HEADER" value="Connection: close\r\nX-Powered-By: W3 Total Cache/0.8\r\nPragma: public\r\nExpires: Sat, 28 Nov 2009 05:36:25 GMT\r\n Cache-Control: max-age=3600, public\r\nContent-Type: text/html; charset=UTF-8\r\nLast-Modified: Sat, 28 Nov 2009 03:50:37 GMT\r\nContent-Encoding: gzip\r\nVary: Accept-Encoding, Cookie, User-Agent" />
     </php>
     <source restrictDeprecations="true" restrictNotices="true" restrictWarnings="true">
         <include>

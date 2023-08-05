@@ -75,7 +75,13 @@ final class AuthorizationResponse implements AuthorizationResponseInterface
 	public function getToken()
 	{
 		# code...
-		return $this->attributes['token'] ?? null;
+		$bearerToken = $this->attributes['token'] ?? null;
+
+		if (null !== $bearerToken) {
+			return 'bearer' === strtolower(substr(trim($bearerToken), 0, strlen('bearer'))) ? substr(trim($bearerToken), strlen('bearer')) : $bearerToken;
+		}
+
+		return $bearerToken;
 	}
 
 }

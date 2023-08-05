@@ -29,6 +29,7 @@ trait RequestClient
     private function sendRequest(string $endpoint, string $method = 'GET', array $body = [], array $headers = []): Response
     {
         $this->resetCurl();
+
         // Sends the request to the coris webservice host
         $this->curl->send([
             'method' => $method,
@@ -39,6 +40,7 @@ trait RequestClient
             ], $headers ?? []),
             'body' => $body
         ]);
+        
         if (200 !== ($statusCode = $this->curl->getStatusCode())) {
             throw new RequestException("/GET $endpoint : Unknown Request error", $statusCode);
         }
@@ -60,5 +62,29 @@ trait RequestClient
         // Disable ssl verification to avoid any SSL error
         $this->curl->disableSSLVerification();
         $this->curl->setOption(\CURLOPT_RETURNTRANSFER, true);
+    }
+
+    /**
+     * Parse request string headers.
+     *
+     * @param string $headers
+     *
+     * @return array
+     */
+    private function parseHeaders($headers)
+    {
+        $headers = preg_split('/\r\n/', (string) ($headers ?? ''), -1, \PREG_SPLIT_NO_EMPTY);
+        $httpHeaders = [];
+        $httpHeaders['Request-Line'] = reset($headers) ?? '';
+        for ($i = 1; $i < \count($headers); ++$i) {
+            if (str_contains($headers[$i], ':')) {
+                [$key, $value] = array_map(static function ($item) {
+                    return $item ? trim($item) : null;
+                }, explode(':', $headers[$i], 2));
+                $httpHeaders[$key] = $value;
+            }
+        }
+
+        return $httpHeaders;
     }
 }

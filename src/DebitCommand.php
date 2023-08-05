@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Drewlabs\Txn\TMoney;
 
 use Drewlabs\Txn\TMoney\Traits\RequestClient;
-use Drewlabs\Txn\TMoney\Contracts\TransactionServerOptionInterface;
-use Drewlabs\Txn\TMoney\Contracts\TransactionServerOptionInterface as ContractsTransactionServerOptionInterface;
+use Drewlabs\Txn\TMoney\Contracts\TransactionServerConfigInterface;
+use Drewlabs\Txn\TMoney\Contracts\TransactionServerConfigInterface as ContractsTransactionServerOptionInterface;
 use Drewlabs\Txn\TMoney\Contracts\CommandResultInterface;
 use Drewlabs\Txn\TMoney\Contracts\TransactionCommandArgInterface;
 use Drewlabs\Txn\TMoney\Exceptions\CommandException;
@@ -27,7 +27,7 @@ final class DebitCommand
 	use RequestClient;
 
 	/**
-	 * @var TransactionServerOptionInterface
+	 * @var TransactionServerConfigInterface
 	 */
 	private $options = null;
 

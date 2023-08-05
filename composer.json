@@ -21,6 +21,11 @@
             "Drewlabs\\Txn\\TMoney\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Drewlabs\\Txn\\TMoney\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "azandrew-sidoine",

@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Drewlabs\Txn\TMoney\Contracts;
 
 
-interface AuthorizationServerInterface
+interface AuthorizationServerConfigInterface
 {
 
 	/**

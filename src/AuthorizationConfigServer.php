@@ -13,11 +13,10 @@ declare(strict_types=1);
 
 namespace Drewlabs\Txn\TMoney;
 
-use Drewlabs\Txn\TMoney\Contracts\AuthorizationServerInterface;
+use Drewlabs\Txn\TMoney\Contracts\AuthorizationServerConfigInterface;
 
-final class AuthorizationServer implements AuthorizationServerInterface
+final class AuthorizationConfigServer implements AuthorizationServerConfigInterface
 {
-
 	/**
 	 * @var string
 	 */

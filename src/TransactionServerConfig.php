@@ -13,11 +13,10 @@ declare(strict_types=1);
 
 namespace Drewlabs\Txn\TMoney;
 
-use Drewlabs\Txn\TMoney\Contracts\TransactionServerOptionInterface;
+use Drewlabs\Txn\TMoney\Contracts\TransactionServerConfigInterface;
 
-final class TransactionServerOption implements TransactionServerOptionInterface
+final class TransactionServerConfig implements TransactionServerConfigInterface
 {
-
 	/**
 	 * @var string
 	 */

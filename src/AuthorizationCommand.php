@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Drewlabs\Txn\TMoney;
 
 use Drewlabs\Txn\TMoney\Traits\RequestClient;
-use Drewlabs\Txn\TMoney\Contracts\AuthorizationServerInterface;
+use Drewlabs\Txn\TMoney\Contracts\AuthorizationServerConfigInterface;
 use Drewlabs\Txn\TMoney\Contracts\AuthorizationResponseInterface;
 use Drewlabs\Txn\TMoney\Contracts\AuthorizationCommandArgInterface;
 use Drewlabs\Txn\TMoney\Exceptions\AuthorizationException;
@@ -26,16 +26,16 @@ final class AuthorizationCommand
 	use RequestClient;
 
 	/**
-	 * @var AuthorizationServerInterface
+	 * @var AuthorizationServerConfigInterface
 	 */
 	private $server = null;
 
 	/**
 	 * Create new class instance
 	 * 
-	 * @param AuthorizationServerInterface $server
+	 * @param AuthorizationServerConfigInterface $server
 	 */
-	public function __construct(AuthorizationServerInterface $server, Curl $curl = null)
+	public function __construct(AuthorizationServerConfigInterface $server, Curl $curl = null)
 	{
 		# code...
 		$this->server = $server;
@@ -61,10 +61,15 @@ final class AuthorizationCommand
 			"motDePasse" => $arg->getAuthorizationSecret()
 		]);
 
-		if (2000 !== ($status = intval($response->getDecodedBodyValue('statut.code'))) && (200 !== $status)) {
+		$status = intval($response->getDecodedBodyValue('status.code', function() use ($response) {
+			// Added a fallback to statut.code case the status.code does not exists
+			return $response->getDecodedBodyValue('statut.code');
+		}));
+	
+		if (2000 !== $status) {
 			// We throw an authorization exception case the response status does not equals 2000 or 200
 			throw new AuthorizationException($response->getDecodedBodyValue('status.description', function () use ($response) {
-				return $response->getDecodedBody('status.message') ?? 'UnAuthorized.';
+				return $response->getDecodedBodyValue('status.message') ?? 'UnAuthorized.';
 			}), $status);
 		}
 		$authResponse = new AuthorizationResponse($response->getDecodedBodyValue('data'), $status ?? $response->getStatusCode());
@@ -77,7 +82,7 @@ final class AuthorizationCommand
 	 * Get server property value
 	 * 
 	 *
-	 * @return AuthorizationServerInterface
+	 * @return AuthorizationServerConfigInterface
 	 */
 	public function getServer()
 	{

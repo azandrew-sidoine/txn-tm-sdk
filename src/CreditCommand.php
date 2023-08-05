@@ -14,8 +14,7 @@ declare(strict_types=1);
 namespace Drewlabs\Txn\TMoney;
 
 use Drewlabs\Txn\TMoney\Traits\RequestClient;
-use Drewlabs\Txn\TMoney\Contracts\TransactionServerOptionInterface;
-use Drewlabs\Txn\TMoney\Contracts\TransactionServerOptionInterface as ContractsTransactionServerOptionInterface;
+use Drewlabs\Txn\TMoney\Contracts\TransactionServerConfigInterface;
 use Drewlabs\Txn\TMoney\Contracts\CreditResultInterface;
 use Drewlabs\Txn\TMoney\Contracts\TransactionCommandArgInterface;
 use Drewlabs\Txn\TMoney\Exceptions\CommandException;
@@ -27,19 +26,19 @@ final class CreditCommand
 	use RequestClient;
 
 	/**
-	 * @var TransactionServerOptionInterface
+	 * @var TransactionServerConfigInterface
 	 */
-	private $options = null;
+	private $config = null;
 
 	/**
 	 * Create new class instance
 	 * 
-	 * @param ContractsTransactionServerOptionInterface $options
+	 * @param TransactionServerConfigInterface $config
 	 */
-	public function __construct(ContractsTransactionServerOptionInterface $options, Curl $curl = null)
+	public function __construct(TransactionServerConfigInterface $config, Curl $curl = null)
 	{
 		# code...
-		$this->options = $options;
+		$this->config = $config;
 		$this->curl = $curl ?? new Curl();
 	}
 
@@ -54,13 +53,13 @@ final class CreditCommand
 	{
 		# code...
 		$response = $this->sendRequest(
-			$this->options->getEndpoint(),
+			$this->config->getEndpoint(),
 			'POST',
 			["idRequete" => $arg->getCommandId(), "numeroClient" => $arg->getAccountNumber(), "montant" => $arg->getAmount(), "refCommande" => $arg->getReference(), "dateHeureRequete" => $arg->getCreatedAt(), "description" => $arg->getDescription()],
-			['Authorization' => sprintf("Bearer %s", $this->options->getBearerToken())]
+			['Authorization' => sprintf("Bearer %s", $this->config->getBearerToken())]
 		);
 
-		if (2000 !== ($status = intval($response->getDecodedBodyValue('code'))) && (200 !== $status)) {
+		if (2000 !== ($status = intval($response->getDecodedBodyValue('code'))) && (200 !== $status) && (2001 !== $status)) {
 			throw new CommandException(get_class($this), $response->getDecodedBodyValue('message', 'Unknown Error'), $status);
 		}
 
@@ -73,9 +72,9 @@ final class CreditCommand
 	 *
 	 * @return ContractsTransactionServerOptionInterface
 	 */
-	public function getOptions()
+	public function getConfig()
 	{
 		# code...
-		return $this->options;
+		return $this->config;
 	}
 }

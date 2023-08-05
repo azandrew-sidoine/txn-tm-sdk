@@ -125,23 +125,25 @@ class Response
      */
     public function getDecodedBodyValue(string $name, $default = null)
     {
-        # code...
+        $default = (!is_string($default) && is_callable($default) ? $default : function() use ($default) {
+            return $default;
+        });
+        
         if (false !== strpos($name, '.')) {
             $keys = explode('.', $name);
             $count = count($keys);
             $index = 0;
             $current = $this->getDecodedBody();
             while ($index < $count) {
-                # code...
                 if (null === $current) {
-                    return (!is_string($default) && is_callable($default) ? $default() : $default ?? null);
+                    return call_user_func($default, $name);
                 }
                 $current = array_key_exists($keys[$index], $current) ? $current[$keys[$index]] : $current[$keys[$index]] ?? null;
                 $index += 1;
             }
-            return $current;
+            return $current ?? call_user_func($default, $name);
         }
-        return $this->getDecodedBody()[$name] ?? (!is_string($default) && is_callable($default) ? $default() : $default ?? null);
+        return $this->getDecodedBody()[$name] ?? call_user_func($default, $name);
     }
 
     /**
